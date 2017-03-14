@@ -133,6 +133,101 @@ ClassB.prototype.sayJob = function () {
 
 以上思路的精妙之处在于ClassMiddle是无参的，它起到了ClassB和ClassA之间的中间桥梁的作用。
 
+现在我们为ClassA添加一些静态属性和方法，ClassA新增如下代码：
+```
+...
+
+//为ClassA添加静态属性
+ClassA.staticValue = "static value";
+
+//为ClassA添加静态方法
+ClassA.getStaticValue = function() {
+    return ClassA.staticValue;
+};
+ClassA.setStaticValue = function(value) {
+    ClassA.staticValue = value;
+};
+```
+
+静态属性和方法不属于某一个实例，而是属于类本身。ClassA.prototype上面定义的方法是实例方法，不是静态的。静态属性和方法是直接添加在ClassA上的。
+
+为了使ClassB也能继承ClassA的静态属性和方法，我们需要为ClassB添加如下代码：
+```
+...
+
+//ClassB继承ClassA的静态属性和方法
+for (var p in ClassA) {
+    if (ClassA.hasOwnProperty(p)) {
+        ClassB[p] = ClassA[p];
+    }
+}
+```
+
+我们最终可以将上述继承代码的公共部分抽离成一个extendsClass方法，如下所示：
+```
+function extendsClass(Child, Father) {
+    //继承父类prototype中定义的实例属性和方法
+    function ClassMiddle() {
+
+    }
+    ClassMiddle.prototype = Father.prototype;
+    Child.prototype = new ClassMiddle();
+    Child.prototype.constructor = Child;
+
+    //继承父类的静态属性和方法
+    for (var p in Father) {
+        if (Father.hasOwnProperty(p)) {
+            Child[p] = Father[p];
+        }
+    }
+}
+```
+
+我们只需要执行`extendsClass(ClassB, ClassA);`就可以完成大部分继承的逻辑。
+
+最终ClassA的完整代码如下所示：
+```
+function ClassA(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+ClassA.prototype.sayName = function() {
+    console.log(this.name);
+};
+
+ClassA.prototype.sayAge = function() {
+    console.log(this.age);
+};
+
+ClassA.staticValue = "static value";
+
+ClassA.getStaticValue = function() {
+    return ClassA.staticValue;
+};
+
+ClassA.setStaticValue = function(value) {
+    ClassA.staticValue = value;
+};
+```
+
+ClassB的完整代码如下所示：
+```
+unction ClassB(name, age, job) {
+    ClassA.apply(this, [name, age]);
+    this.job = job;
+}
+
+extendsClass(ClassB, ClassA);
+
+ClassB.prototype.sayJob = function() {
+    console.log(this.job);
+};
+```
+
+我们可以在控制台中进行一下简单测试：
+
+
 ## ES5实现继承
 
 ## ES6实现继承
