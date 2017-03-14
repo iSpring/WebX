@@ -226,7 +226,9 @@ ClassB.prototype.sayJob = function() {
 ```
 
 我们可以在控制台中进行一下简单测试：
-
+<p align="center">
+    <img src="https://github.com/iSpring/WebX/blob/master/tutorials/prototype/images/test1.png" />
+</p>
 
 ## ES5实现继承
 
