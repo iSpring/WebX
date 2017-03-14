@@ -1,18 +1,12 @@
 ﻿function extendsClass(Child, Father) {
     //继承父类prototype中定义的实例属性和方法
-    function ClassMiddle() {
-
-    }
-    ClassMiddle.prototype = Father.prototype;
-    Child.prototype = new ClassMiddle();
+    Child.prototype = Object.create(Father.prototype);
     Child.prototype.constructor = Child;
 
     //继承父类的静态属性和方法
-    for (var p in Father) {
-        if (Father.hasOwnProperty(p)) {
-            Child[p] = Father[p];
-        }
-    }
+    Object.keys(Father).forEach(function(key) {
+        Child[key] = Father[key];
+    });
 }
 
 //---------------------------

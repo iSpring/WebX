@@ -4,7 +4,7 @@
 
 执行代码`var o = new Object();`，此时o对象内部会存储一个指针，这个指针指向了Object.prototype，当执行`o.toString()`等方法（或访问其他属性）时，o会首先查看自身有没有该方法或属性，如果没有的话就沿着内部存储的指针找到`Object.prototype`对象，然后查看`Object.prototype`对象是否有对应名称的方法或属性，如果有就调用`Object.prototype`的方法或属性。**我们把这个指针叫做o对象的原型，你可以把它看做是Java类继承中的`super`关键字。**
 
-ES3规范中定义了`Object.prototype.isPrototypeOf()`方法，该方法可以判断某个对象是不是另一个对象的原型。`Object.prototype.isPrototypeOf(o)`返回true值可以确定Object.prototype就是o对象的原型。在ES3规范中，不能直接读取o对象的原型，也就是o对象的原型看不见摸不着的。ES5.1规范定义了[Object.getPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf)方法，通过该方法可以获取对象的原型。我们可以通过`Object.getPrototypeOf(o) === Object.prototype`再次验证Object.prototype就是o对象的原型。ES6规范更加直接，为对象添加了一个`__proto__`属性，通过这个属性就可以获得对象的原型，所以在支持`__proto__`的浏览器中，`o.__proto__ === Object.prototype`也会返回true。
+ES3规范中定义了[Object.prototype.isPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf)方法，该方法可以判断某个对象是不是另一个对象的原型。`Object.prototype.isPrototypeOf(o)`返回true值可以确定Object.prototype就是o对象的原型。在ES3规范中，不能直接读取o对象的原型，也就是o对象的原型看不见摸不着的。ES5.1规范定义了[Object.getPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf)方法，通过该方法可以获取对象的原型。我们可以通过`Object.getPrototypeOf(o) === Object.prototype`再次验证Object.prototype就是o对象的原型。ES6规范更加直接，为对象添加了一个`__proto__`属性，通过这个属性就可以获得对象的原型，所以在支持`__proto__`的浏览器中，`o.__proto__ === Object.prototype`也会返回true。
 
 当我们执行`var x = new X();`时，浏览器会执行`x.__proto__ = X.prototype`，**即实例化的对象的原型设置为对应的类的prototype对象，这一点很重要**。
 
@@ -231,6 +231,26 @@ ClassB.prototype.sayJob = function() {
 </p>
 
 ## ES5实现继承
+ES5.1规范中新增了[Object.create()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create)方法，该方法会传入一个对象，然后会返回一个对象，返回的对象的原型指向传入的对象，所以我们可以简化之前的代码，不再需要ClassMiddle，只需要执行`ClassB.prototype = Object.create(ClassA.prototype)`即可。
+
+而且ES5.1中新增了[Object.keys()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys)方法用以获取对象自身的属性数组，我们可以用该方法简化继承父类静态属性和方法的过程。
+
+根据以上两点，我们修改extendsClass方法如下所示：
+
+```
+function extendsClass(Child, Father) {
+    //继承父类prototype中定义的实例属性和方法
+    Child.prototype = Object.create(Father.prototype);
+    Child.prototype.constructor = Child;
+
+    //继承父类的静态属性和方法
+    Object.keys(Father).forEach(function(key) {
+        Child[key] = Father[key];
+    });
+}
+```
+
+ClassA和ClassB的代码无需变化。
 
 ## ES6实现继承
 
