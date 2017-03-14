@@ -19,7 +19,9 @@ function Person(){};
 var p = new Person();
 ```
 
-p.__proto__指向了Person.prototype，Person.prototype的原型是Person.prototype.__proto__，其指向了Object.prototype，通过`__proto__`向上追踪形成了链式结构：
+`p.__proto__`指向了`Person.prototype`，`Person.prototype`的原型是`Person.prototype.__proto__`，其指向了`Object.prototype`，`Object.prototype.__proto__`为null。
+
+通过`__proto__`向上追踪形成了如下的链式结构：
 ```
 p -> Person.prototype -> Object.prototype -> null
 ```
