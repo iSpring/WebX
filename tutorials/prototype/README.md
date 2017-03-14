@@ -53,6 +53,86 @@ ClassA.prototype.sayAge = function () {
 
 ClassA构造函数内部定义了`name`和`age`两个属性，并且在其原型上定义了`sayName`和`sayAage`两个方法。
 
+ClassB如下所示：
+```
+function ClassB(name, age, job) {
+    ClassA.apply(this, [name, age]);
+    this.job = job;
+}
+```
+ClassB新增了`job`属性，我们在其构造函数中执行`ClassA.apply(this, [name, age]);`，相当于在Java类的构造函数中通过`super()`调用父类的构造函数以初始化相关属性。
+
+此时我们可以通过`var b = new ClassB("sunqun", 28, "developer");`进行实例化，并可以访问`b.name`、`b.age`、`b.job`三个属性，但此时b还不能访问ClassA中定义的`sayName`和`sayAage`两个方法。
+
+然后我们新增代码`ClassB.prototype = ClassA.prototype;`，此时ClassB的代码如下所示：
+```
+function ClassB(name, age, job) {
+    ClassA.apply(this, [name, age]);
+    this.job = job;
+}
+//新增
+ClassB.prototype = ClassA.prototype;
+```
+
+当执行`var b = new ClassB("sunqun", 28, "developer");`时，b.__proto__指向的是ClassB.prototype，由于通过新增的代码已经将`ClassB.prototype`指向了`ClassA.prototype`，所以此时b.__proto__指向了`ClassA.prototype`。这样当执行`b.sayName()`时，会执行`b.__proto__.sayName()`，即最终执行了`ClassA.prototype.sayName()`，这样ClassB的实例就能调用ClassA中方法了。
+
+此时我们想为ClassB新增加一个`sayJob`方法用于输出`job`属性的值，如下所示：
+
+```
+function ClassB(name, age, job) {
+    ClassA.apply(this, [name, age]);
+    this.job = job;
+}
+ClassB.prototype = ClassA.prototype;
+//新增
+ClassB.prototype.sayJob = function(){
+    console.log(this.job);
+};
+```
+
+此时问题出现了，我们为`ClassB.prototype`添加`sayJob`方法时，其实修改了`ClassA.prototype`，这样会导致ClassA所有的实例也都有了`sayJob`方法，这显然不是我们期望的。
+
+为了解决这个问题，我们再次修改ClassB的代码，如下所示：
+```
+function ClassB(name, age, job) {
+    ClassA.apply(this, [name, age]);
+    this.job = job;
+}
+// ClassB.prototype = ClassA.prototype;
+//修改
+ClassB.prototype = new ClassA();
+ClassB.prototype.constructor = ClassB;
+ClassB.prototype.sayJob = function(){
+    console.log(this.job);
+};
+```
+
+我们通过执行`ClassB.prototype = new ClassA();`将ClassA实例化的对象作为ClassB的prototype，这样ClassB仍然能够使用ClassA中定义的方法，但是`ClassB.prototype`已经和`ClassA.prototype`完全隔离了。我们的目的达到了，我们可以随意向`ClassB.prototype`添加我们想要的方法了。有个细节需要注意，`ClassB.prototype = new ClassA();`会导致`ClassB.prototype.constructor`指向ClassA的实例化对象，为此我们通过`ClassB.prototype.constructor = ClassB;`解决这个问题。
+
+一切貌似完美的解决了，但是这种实现还是存在隐患。我们在执行`ClassB.prototype = new ClassA();`的时候，给ClassA传递的是空参数，但是ClassA的构造函数默认参数是有值的，可能会在构造函数中对传入的参数进行各种处理，传递空参数很有可能导致报错（当然本示例中的ClassA不会）。于是我们再次修改ClassB的代码如下所示：
+```
+function ClassB(name, age, job) {
+    ClassA.apply(this, [name, age]);
+    this.job = job;
+}
+//修改
+function ClassMiddle() {
+
+}
+ClassMiddle.prototype = ClassA.prototype;
+ClassB.prototype = new ClassMiddle();
+ClassB.prototype.constructor = ClassB;
+ClassB.prototype.sayJob = function () {
+    console.log(this.job);
+};
+```
+
+这次我们引入了一个不需要形参的函数`ClassMiddle`作为ClassB和ClassA之间的中间桥梁。
+ 1. `ClassMiddle.prototype = ClassA.prototype;`：将`ClassMiddle.prototype`指向`ClassA.prototype`，这样ClassMiddle可以访问ClassA中定义的方法。
+ 2. `ClassB.prototype.constructor = ClassB;`：将ClassMiddle的实例化对象赋值给ClassB.prototype，这样ClassB就能使用ClassMiddle中定义的方法，即能间接方法ClassA中定义的方法。
+
+以上思路的精妙之处在于ClassMiddle是无参的，它起到了ClassB和ClassA之间的中间桥梁的作用。
+
 ## ES5实现继承
 
 ## ES6实现继承
