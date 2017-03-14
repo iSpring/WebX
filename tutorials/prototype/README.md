@@ -213,7 +213,7 @@ ClassA.setStaticValue = function(value) {
 
 ClassB的完整代码如下所示：
 ```
-unction ClassB(name, age, job) {
+function ClassB(name, age, job) {
     ClassA.apply(this, [name, age]);
     this.job = job;
 }
