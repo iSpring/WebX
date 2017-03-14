@@ -31,6 +31,28 @@ JavaScript中的继承是通过原型实现的，虽然在ES6中引入了class�
 
 ## ES3实现继承
 
+在JavaScript中，所谓的类就是函数，函数就是类。一般情况下，我们在函数的prototype上面定义方法，因为这样所有类的实例都可以公用这些方法；在函数内部（构造函数）中初始化属性，这样所有类的实例的属性都是相互隔离的。
+
+我们定义ClassA和ClassB两个类，想让ClassB继承自ClassA。
+
+ClassA代码如下所示：
+```
+function ClassA(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+ClassA.prototype.sayName = function () {
+    console.log(this.name);
+};
+
+ClassA.prototype.sayAge = function () {
+    console.log(this.age);
+};
+```
+
+ClassA构造函数内部定义了`name`和`age`两个属性，并且在其原型上定义了`sayName`和`sayAage`两个方法。
+
 ## ES5实现继承
 
 ## ES6实现继承
