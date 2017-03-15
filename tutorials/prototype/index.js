@@ -1,4 +1,4 @@
-﻿function extendsClass(Child, Father) {
+﻿/*function extendsClass(Child, Father) {
     //ES3
     //继承父类prototype中定义的实例属性和方法
     // function ClassMiddle() {
@@ -74,11 +74,48 @@ extendsClass(ClassB, ClassA);
 
 ClassB.prototype.sayJob = function() {
     console.log(this.job);
-};
+};*/
+
+//------------------------------------
+class ClassA{
+    constructor(name, age){
+        this.name = name;
+        this.age = age;
+    }
+
+    sayName(){
+        console.log(this.name);
+    }
+
+    sayAge(){
+        console.log(this.age);
+    }
+
+    static getStaticValue(){
+        return ClassA.staticValue;
+    }
+
+    static setStaticValue(value){
+        ClassA.staticValue = value;
+    }
+}
+
+ClassA.staticValue = "static value";
+
+class ClassB extends ClassA{
+    constructor(name, age, job){
+        super(name, age);
+        this.job = job;
+    }
+
+    sayJob(){
+        console.log(this.job);
+    }
+}
 
 //-------------------------------------
 var b = new ClassB("sunqun", 28, "developer");
 b.sayName();
 b.sayAge();
 b.sayJob();
-ClassB.getStaticValue();
+console.log(ClassB.getStaticValue());

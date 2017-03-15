@@ -6,7 +6,7 @@
 
 ES3规范中定义了[Object.prototype.isPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf)方法，该方法可以判断某个对象是不是另一个对象的原型。`Object.prototype.isPrototypeOf(o)`返回true值可以确定Object.prototype就是o对象的原型。在ES3规范中，不能直接读取o对象的原型，也就是o对象的原型看不见摸不着的。ES5.1规范定义了[Object.getPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf)方法，通过该方法可以获取对象的原型。我们可以通过`Object.getPrototypeOf(o) === Object.prototype`再次验证Object.prototype就是o对象的原型。ES6规范更加直接，为对象添加了一个`__proto__`属性，通过这个属性就可以获得对象的原型，所以在支持`__proto__`的浏览器中，`o.__proto__ === Object.prototype`也会返回true。
 
-当我们执行`var x = new X();`时，浏览器会执行`x.__proto__ = X.prototype`，**即实例化的对象的原型设置为对应的类的prototype对象，这一点很重要**。
+当我们执行`var x = new X();`时，浏览器会执行`x.__proto__ = X.prototype`，**会将实例化对象的原型设置为对应的类的prototype对象，这一点很重要**。
 
 ## 原型链
 
@@ -27,7 +27,7 @@ p -> Person.prototype -> Object.prototype -> null
 
 JavaScript 对象有一个指向一个原型对象的链。当试图访问一个对象的属性时，它不仅仅在该对象上搜寻，还会搜寻该对象的原型，以及该对象的原型的原型，依此层层向上搜索，直到找到一个名字匹配的属性或到达原型链的末尾。
 
-JavaScript中的继承是通过原型实现的，虽然在ES6中引入了class关键字，但是它只是原型的语法糖，JavaScript 仍然是基于原型的。
+JavaScript中的继承是通过原型实现的，虽然在ES6中引入了`class`关键字，但是它只是原型的语法糖，JavaScript继承仍然是基于原型实现的。
 
 ## ES3实现继承
 
@@ -279,18 +279,69 @@ function extendsClass(Child, Father) {
 
  2. `Object.setPrototypeOf(Child, Father);`相当于执行代码`Child.__proto__ = Father;`，使得Child能够继承Father中的静态属性和方法。
 
-## 总结
- 1. 实现类继承的关键是`Child.prototype.__proto__ =  Father.prototype;`，这样会将`Father.prototype`作为`Child.prototype`的原型。`Object.prototype.__proto__`属性是在ES6规范中所引入的，为了在ES3和ES5中需要通过各种方式模拟实现对`Object.prototype.__proto__`进行赋值。
+ES6中引入了[class](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)关键字，可以用`class`直接定义类，通过`extends`关键字实现类的继承，还可以通过`static`关键字定义类的静态方法。
 
- 2. 通过执行`Child.__proto__ = Father;`可以实现继承父类的静态属性和方法。
+我们用`class`等关键字重新实现ClassA和ClassB的代码，如下所示：
+```
+class ClassA{
+    constructor(name, age){
+        this.name = name;
+        this.age = age;
+    }
+
+    sayName(){
+        console.log(this.name);
+    }
+
+    sayAge(){
+        console.log(this.age);
+    }
+
+    static getStaticValue(){
+        return ClassA.staticValue;
+    }
+
+    static setStaticValue(value){
+        ClassA.staticValue = value;
+    }
+}
+
+ClassA.staticValue = "static value";
+
+class ClassB extends ClassA{
+    constructor(name, age, job){
+        super(name, age);
+        this.job = job;
+    }
+
+    sayJob(){
+        console.log(this.job);
+    }
+}
+```
+
+ES6中不能通过`static`定义类的静态属性，我们可以直接通过`ClassA.staticValue = "static value";`定义类的静态属性。
+
+需要注意的是，`class`关键字只是原型的语法糖，JavaScript继承仍然是基于原型实现的。
+
+并不是所有的浏览器都支持`class`关键字，在生产环境中，我们可以编写ES6的代码，然后用Babel或TypeScript将其编译为ES5等主流浏览器支持的语法格式。
+
+## 总结
+ 1. 执行`var x = new X();`时，浏览器会执行`x.__proto__ = X.prototype`，会将实例化对象的原型设置为对应的类的prototype对象。
+
+ 2. 实现类继承的关键是`Child.prototype.__proto__ =  Father.prototype;`，这样会将`Father.prototype`作为`Child.prototype`的原型。`Object.prototype.__proto__`属性是在ES6规范中所引入的，为了在ES3和ES5中需要通过各种方式模拟实现对`Object.prototype.__proto__`进行赋值。
+
+ 3. 通过执行`Child.__proto__ = Father;`可以实现继承父类的静态属性和方法。
 
 ## 参考
-ES3 [Object.prototype.isPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf)
+[1] MDN, [ES3 Object.prototype.isPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf)
 
-ES5.1 [Object.create()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create)
+[2] MDN, [ES5.1 Object.create()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create)
 
-ES5.1 [Object.getPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf)
+[3] MDN, [ES5.1 Object.getPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf)
 
-ES6 [Object.setPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf)
+[4] MDN, [ES6 Object.setPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf)
 
-ES6 [Object.prototype__proto__](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto)
+[5] MDN, [ES6 Object.prototype__proto__](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto)
+
+[6] MDN, [ES6 Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)
