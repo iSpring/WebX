@@ -75,3 +75,10 @@ extendsClass(ClassB, ClassA);
 ClassB.prototype.sayJob = function() {
     console.log(this.job);
 };
+
+//-------------------------------------
+var b = new ClassB("sunqun", 28, "developer");
+b.sayName();
+b.sayAge();
+b.sayJob();
+ClassB.getStaticValue();
