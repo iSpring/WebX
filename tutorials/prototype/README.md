@@ -231,7 +231,7 @@ ClassB.prototype.sayJob = function() {
 </p>
 
 ## ES5实现继承
-ES5.1规范中新增了[Object.create()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create)方法，该方法会传入一个对象，然后会返回一个对象，返回的对象的原型指向传入的对象，所以我们可以简化之前的代码，不再需要ClassMiddle，只需要执行`ClassB.prototype = Object.create(ClassA.prototype)`即可。
+ES5.1规范中新增了[Object.create()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create)方法，该方法会传入一个对象，然后会返回一个对象，返回的对象的原型指向传入的对象，比如执行代码`var output = Object.create(input)`，相当于执行代码`output.__proto__ = input;`，output的原型是input。我们可以简化之前的代码，不再需要ClassMiddle，只需要执行`ClassB.prototype = Object.create(ClassA.prototype);`即可，相当于执行代码`ClassB.prototype.__proto__ = ClassA.prototype;`。
 
 而且ES5.1中新增了[Object.keys()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys)方法用以获取对象自身的属性数组，我们可以用该方法简化继承父类静态属性和方法的过程。
 
