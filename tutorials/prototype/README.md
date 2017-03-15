@@ -128,8 +128,8 @@ ClassB.prototype.sayJob = function () {
 ```
 
 这次我们引入了一个不需要形参的函数`ClassMiddle`作为ClassB和ClassA之间的中间桥梁。
- 1. `ClassMiddle.prototype = ClassA.prototype;`：将`ClassMiddle.prototype`指向`ClassA.prototype`，这样ClassMiddle可以访问ClassA中定义的方法。
- 2. `ClassB.prototype.constructor = ClassB;`：将ClassMiddle的实例化对象赋值给ClassB.prototype，这样ClassB就能使用ClassMiddle中定义的方法，即能间接方法ClassA中定义的方法。
+ 1. `ClassMiddle.prototype = ClassA.prototype;`： 将`ClassMiddle.prototype`指向`ClassA.prototype`，这样ClassMiddle可以访问ClassA中定义的方法。
+ 2. `ClassB.prototype = new ClassMiddle();`： 将ClassMiddle的实例化对象赋值给ClassB.prototype，这样就相当于执行了`ClassB.prototype.__proto__ = ClassMiddle.prototype;`，所以ClassB就能使用ClassMiddle中定义的方法，又因为`ClassMiddle.prototype`指向了`ClassA.prototype`，所以`ClassB.prototype.__proto__`也指向了`ClassA.prototype`，这样ClassB能使用ClassA中定义的方法。
 
 以上思路的精妙之处在于ClassMiddle是无参的，它起到了ClassB和ClassA之间的中间桥梁的作用。
 
