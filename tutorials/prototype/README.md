@@ -253,6 +253,36 @@ function extendsClass(Child, Father) {
 ClassA和ClassB的代码无需变化。
 
 ## ES6实现继承
+我们之前提到，ES6规范定义了[Object.prototype.__proto__](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto)属性，该属性既可读又可写，通过`__proto__`属性我们可以直接指定对象的原型。于是在ES6中我们将extendsClass修改为如下所示：
+```
+function extendsClass(Child, Father) {
+    //继承父类prototype中定义的实例属性和方法
+    Child.prototype.__proto__ = Father.prototype;//暴力直接，利用__proto__属性设置对象的原型
+
+    //继承父类的静态属性和方法
+    Object.keys(Father).forEach(function(key) {
+        Child[key] = Father[key];
+    });
+}
+```
+
+直接修改对象的`__proto__`属性值不是最佳选择，ES6规范中还定义了[Object.setPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf)方法，通过执行`Object.setPrototypeOf(b, a)`会将a对象作为b对象的原型，即相当于执行了`b.__proto__ = a;`。为此我们利用该方法再次精简我们的extendsClass方法，如下所示：
+```
+function extendsClass(Child, Father) {
+    //继承父类prototype中定义的实例属性和方法
+    Object.setPrototypeOf(Child.prototype, Father.prototype);
+
+    //继承父类的静态属性和方法
+    Object.setPrototypeOf(Child, Father);
+}
+```
+
+ 1. `Object.setPrototypeOf(Child.prototype, Father.prototype);`相当于执行代码`Child.prototype.__proto__ = Father.prototype;`，使得Child能够继承Father中的实例属性和方法。
+
+ 2. `Object.setPrototypeOf(Child, Father);`相当于执行代码`Child.__proto__ = Father;`，使得Child能够继承Father中的静态属性和方法。
+
+## 总结
+实现类继承的关键是`Child.prototype.__proto__ =  Father.prototype;`，这样会将`Father.prototype`作为`Child.prototype`的原型。`Object.prototype.__proto__`属性是在ES6规范中所引入的，为了在ES3和ES5中需要通过各种方式模拟实现对`Object.prototype.__proto__`进行赋值。
 
 ## 参考
 ES3 [Object.prototype.isPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf)
@@ -261,6 +291,6 @@ ES5.1 [Object.create()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/
 
 ES5.1 [Object.getPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getPrototypeOf)
 
-ES6 [Object.setPrototypeOf](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf)
+ES6 [Object.setPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf)
 
 ES6 [Object.prototype__proto__](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto)
