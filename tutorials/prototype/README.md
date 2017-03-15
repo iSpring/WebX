@@ -11,6 +11,7 @@ ES3规范中定义了[Object.prototype.isPrototypeOf()](https://developer.mozill
 ## 原型链
 
 我们执行如下代码：
+
 ```
 function Person(){};
 var p = new Person();
@@ -19,6 +20,7 @@ var p = new Person();
 `p.__proto__`指向了`Person.prototype`，`Person.prototype`的原型是`Person.prototype.__proto__`，其指向了`Object.prototype`，`Object.prototype.__proto__`为null。
 
 通过`__proto__`向上追踪形成了如下的链式结构：
+
 ```
 p -> Person.prototype -> Object.prototype -> null
 ```
@@ -36,6 +38,7 @@ JavaScript中的继承是通过原型实现的，虽然在ES6中引入了`class`
 我们定义ClassA和ClassB两个类，想让ClassB继承自ClassA。
 
 ClassA代码如下所示：
+
 ```
 function ClassA(name, age) {
     this.name = name;
@@ -54,6 +57,7 @@ ClassA.prototype.sayAge = function () {
 ClassA构造函数内部定义了`name`和`age`两个属性，并且在其原型上定义了`sayName`和`sayAage`两个方法。
 
 ClassB如下所示：
+
 ```
 function ClassB(name, age, job) {
     ClassA.apply(this, [name, age]);
@@ -65,6 +69,7 @@ ClassB新增了`job`属性，我们在其构造函数中执行`ClassA.apply(this
 此时我们可以通过`var b = new ClassB("sunqun", 28, "developer");`进行实例化，并可以访问`b.name`、`b.age`、`b.job`三个属性，但此时b还不能访问ClassA中定义的`sayName`和`sayAage`两个方法。
 
 然后我们新增代码`ClassB.prototype = ClassA.prototype;`，此时ClassB的代码如下所示：
+
 ```
 function ClassB(name, age, job) {
     ClassA.apply(this, [name, age]);
@@ -93,6 +98,7 @@ ClassB.prototype.sayJob = function(){
 此时问题出现了，我们为`ClassB.prototype`添加`sayJob`方法时，其实修改了`ClassA.prototype`，这样会导致ClassA所有的实例也都有了`sayJob`方法，这显然不是我们期望的。
 
 为了解决这个问题，我们再次修改ClassB的代码，如下所示：
+
 ```
 function ClassB(name, age, job) {
     ClassA.apply(this, [name, age]);
@@ -110,6 +116,7 @@ ClassB.prototype.sayJob = function(){
 我们通过执行`ClassB.prototype = new ClassA();`将ClassA实例化的对象作为ClassB的prototype，这样ClassB仍然能够使用ClassA中定义的方法，但是`ClassB.prototype`已经和`ClassA.prototype`完全隔离了。我们的目的达到了，我们可以随意向`ClassB.prototype`添加我们想要的方法了。有个细节需要注意，`ClassB.prototype = new ClassA();`会导致`ClassB.prototype.constructor`指向ClassA的实例化对象，为此我们通过`ClassB.prototype.constructor = ClassB;`解决这个问题。
 
 一切貌似完美的解决了，但是这种实现还是存在隐患。我们在执行`ClassB.prototype = new ClassA();`的时候，给ClassA传递的是空参数，但是ClassA的构造函数默认参数是有值的，可能会在构造函数中对传入的参数进行各种处理，传递空参数很有可能导致报错（当然本示例中的ClassA不会）。于是我们再次修改ClassB的代码如下所示：
+
 ```
 function ClassB(name, age, job) {
     ClassA.apply(this, [name, age]);
@@ -134,6 +141,7 @@ ClassB.prototype.sayJob = function () {
 以上思路的精妙之处在于ClassMiddle是无参的，它起到了ClassB和ClassA之间的中间桥梁的作用。
 
 现在我们为ClassA添加一些静态属性和方法，ClassA新增如下代码：
+
 ```
 ...
 
@@ -152,6 +160,7 @@ ClassA.setStaticValue = function(value) {
 静态属性和方法不属于某一个实例，而是属于类本身。ClassA.prototype上面定义的方法是实例方法，不是静态的。静态属性和方法是直接添加在ClassA上的。
 
 为了使ClassB也能继承ClassA的静态属性和方法，我们需要为ClassB添加如下代码：
+
 ```
 ...
 
@@ -164,6 +173,7 @@ for (var p in ClassA) {
 ```
 
 我们最终可以将上述继承代码的公共部分抽离成一个extendsClass方法，如下所示：
+
 ```
 function extendsClass(Child, Father) {
     //继承父类prototype中定义的实例属性和方法
@@ -186,6 +196,7 @@ function extendsClass(Child, Father) {
 我们只需要执行`extendsClass(ClassB, ClassA);`就可以完成大部分继承的逻辑。
 
 最终ClassA的完整代码如下所示：
+
 ```
 function ClassA(name, age) {
     this.name = name;
@@ -212,6 +223,7 @@ ClassA.setStaticValue = function(value) {
 ```
 
 ClassB的完整代码如下所示：
+
 ```
 function ClassB(name, age, job) {
     ClassA.apply(this, [name, age]);
@@ -254,6 +266,7 @@ ClassA和ClassB的代码无需变化。
 
 ## ES6实现继承
 我们之前提到，ES6规范定义了[Object.prototype.__proto__](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto)属性，该属性既可读又可写，通过`__proto__`属性我们可以直接指定对象的原型。于是在ES6中我们将extendsClass修改为如下所示：
+
 ```
 function extendsClass(Child, Father) {
     //继承父类prototype中定义的实例属性和方法
@@ -265,6 +278,7 @@ function extendsClass(Child, Father) {
 ```
 
 直接修改对象的`__proto__`属性值不是最佳选择，ES6规范中还定义了[Object.setPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/setPrototypeOf)方法，通过执行`Object.setPrototypeOf(b, a)`会将a对象作为b对象的原型，即相当于执行了`b.__proto__ = a;`。为此我们利用该方法再次精简我们的extendsClass方法，如下所示：
+
 ```
 function extendsClass(Child, Father) {
     //继承父类prototype中定义的实例属性和方法
@@ -282,6 +296,7 @@ function extendsClass(Child, Father) {
 ES6中引入了[class](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes)关键字，可以用`class`直接定义类，通过`extends`关键字实现类的继承，还可以通过`static`关键字定义类的静态方法。
 
 我们用`class`等关键字重新实现ClassA和ClassB的代码，如下所示：
+
 ```
 class ClassA{
     constructor(name, age){
