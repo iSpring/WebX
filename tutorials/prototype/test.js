@@ -25,14 +25,17 @@
     //     Child[key] = Father[key];
     // });
 
-    Child.prototype.__proto__ = Father.prototype;
-    // Child.prototype.constructor = Child.constructor;
+    //ES6
+    //继承父类prototype中定义的实例属性和方法
+    // Child.prototype.__proto__ = Father.prototype;
+    //继承父类的静态属性和方法
+    // Child.__proto__ = Father;
 
     //ES6
     //继承父类prototype中定义的实例属性和方法
-    // Object.setPrototypeOf(Child.prototype, Father.prototype);
+    Object.setPrototypeOf(Child.prototype, Father.prototype);
     //继承父类的静态属性和方法
-    // Object.setPrototypeOf(Child, Father);
+    Object.setPrototypeOf(Child, Father);
 }
 
 //---------------------------

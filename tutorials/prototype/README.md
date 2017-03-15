@@ -260,9 +260,7 @@ function extendsClass(Child, Father) {
     Child.prototype.__proto__ = Father.prototype;//暴力直接，利用__proto__属性设置对象的原型
 
     //继承父类的静态属性和方法
-    Object.keys(Father).forEach(function(key) {
-        Child[key] = Father[key];
-    });
+    Child.__proto__ = Father;
 }
 ```
 
@@ -282,7 +280,9 @@ function extendsClass(Child, Father) {
  2. `Object.setPrototypeOf(Child, Father);`相当于执行代码`Child.__proto__ = Father;`，使得Child能够继承Father中的静态属性和方法。
 
 ## 总结
-实现类继承的关键是`Child.prototype.__proto__ =  Father.prototype;`，这样会将`Father.prototype`作为`Child.prototype`的原型。`Object.prototype.__proto__`属性是在ES6规范中所引入的，为了在ES3和ES5中需要通过各种方式模拟实现对`Object.prototype.__proto__`进行赋值。
+ 1. 实现类继承的关键是`Child.prototype.__proto__ =  Father.prototype;`，这样会将`Father.prototype`作为`Child.prototype`的原型。`Object.prototype.__proto__`属性是在ES6规范中所引入的，为了在ES3和ES5中需要通过各种方式模拟实现对`Object.prototype.__proto__`进行赋值。
+
+ 2. 通过执行`Child.__proto__ = Father;`可以实现继承父类的静态属性和方法。
 
 ## 参考
 ES3 [Object.prototype.isPrototypeOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf)
