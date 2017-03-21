@@ -1,0 +1,11 @@
+{
+  "name": "prototype",
+  "version": "1.0.0",
+  "description": "执行代码`var o = new Object();`，此时o对象内部会存储一个指针，这个指针指向了Object.prototype，当执行`o.toString()`等方法（或访问其他属性）时，o会首先查看自身有没有该方法或属性，如果没有的话就沿着内部存储的指针找到`Object.prototype`对象，然后查看`Object.prototype`对象是否有对应名称的方法或属性，如果有就调用`Object.prototype`的方法或属性。**我们把这个指针叫做o对象的原型，你可以把它看做是Java类继承中的`super`关键字。**",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
