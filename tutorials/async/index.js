@@ -59,6 +59,12 @@ divide(1, 0).then(function(result){
     console.error(err);
 });
 
+divide(1, 0).then(function(result){
+    console.log("1 / 0 = " + result);
+}).catch(function(err){
+    console.error(err);
+});
+
 
 var p1 = add(1, 2);
 var p2 = minus(5, 3);
