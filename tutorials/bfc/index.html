@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <style type="text/css">
+        #container1 {
+            width: 400px;
+            border: 1px solid #ccc;
+        }
+        
+        #container1 .aside {
+            float: left;
+            background-color: yellowgreen;
+            height: 150px;
+            width: 100px;
+        }
+        
+        #container1 .main {
+            background-color: green;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        #container2 {
+            width: 300px;
+            margin-top: 50px;
+            border: 1px solid #ccc;
+        }
+        
+        #container2 .wrapper {
+            overflow: hidden;
+        }
+        
+        #container2 .child {
+            height: 100px;
+            background-color: yellowgreen;
+        }
+        
+        #container2 .child1 {
+            margin-bottom: 100px;
+        }
+        
+        #container2 .child2 {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container1">
+        <div class="aside"></div>
+        <div class="main"></div>
+    </div>
+
+    <div id="container2">
+        <div class="wrapper">
+            <div class="child child1"></div>
+        </div>
+        <div class="child child2"></div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebWorker</title>
+  </head>
+  <body>
+    <p>如果想接收从A发送来的message，那么需要为A添加message事件，A.addEventListener('message', function(evt){}, false)</p>
+    <p>如果想向B发送message，那么需要调用B.postMessage(message)</p>
+    <p>可以通过监听worker的error事件捕获工作线程的错误</p>
+    <p>在worker中不能访问window对象，可以使用self，self是一个DedicatedWorkerGlobalScope对象</p>
+    <p>在主线程中可以通过调用worker.terminate()停止worker，也可以在worker代码中使用self.close()停止</p>
+    <p>postMessage()方法可以传递字符串或对象，IE8/9只能传递字符串</p>
+    <p>主线程和工作线程之间通过postMessage()传递JSON对象时，对象会被序列化，然后在另一端反序列化，即实现了对象的拷贝，二者没有共享该对象实例</p>
+    <p>
+      <div>默认情况下，通过postMessage()传递File、Blob、ArrayBuffer等类型的数据也会被拷贝，这可能会造成性能瓶颈，为此可以为postMessage()指定第二个参数，该参数是一个ArrayBuffer的数组，该数组用于设置有哪些无需拷贝的对象，这些对象是可转移对象（Transferrable objects），例如：</div>
+      <div>worker.postMessage({data: int8View, moreData: anotherBuffer}, [int8View.buffer, anotherBuffer]);</div>
+    </p>
+    <p>WebWorker可以访问navigator对象、location对象（只读）、setTimeout()/clearTimeout()/setInterval()/clearInterval()、Application Cache、启动其他WebWorker、通过importScripts（）导入外部脚本</p>
+    <p>WebWorker不能访问DOM（非线程安全），不能访问window对象，不能访问document对象，不能访问parent对象</p>
+    <p>Chrome浏览器默认不允许在file：//协议中使用WebWorker</p>
+    <p>在引入作为WebWorker使用的外部文件，期协议必须与浏览器一致，也就是说在https协议的页面中不能导入一个http协议的外部文件作为WebWorker</p>
+    <p>
+      <div>可以通过Blob创建内联的WebWorker，无需引入单独的JavaScript文件，如下：</div>
+      <pre>
+var blob = new Blob([
+    "onmessage = function(e) { postMessage('msg from worker'); }"]);
+
+// Obtain a blob URL reference to our worker 'file'.
+var blobURL = window.URL.createObjectURL(blob);//比如blob:http://localhost/c745ef73-ece9-46da-8f66-ebes574789b1
+
+var worker = new Worker(blobURL);
+worker.onmessage = function(e) {
+  // e.data == 'msg from worker'
+};
+worker.postMessage(); // Start the worker.
+      </pre>
+    </p>
+
+
+  </body>
+  <script type="text/javascript">
+    var worker = new Worker("worker.js");
+
+    worker.addEventListener('message', function(evt){
+      if(typeof evt.data === 'string'){
+        console.log("主线程收到WebWorker的字符串message: " + evt.data);
+      }else{
+        console.log("主线程收到WebWorker的对象message: " + JSON.stringify(evt.data));
+      }
+    }, false);
+
+    //向worker发送message
+    worker.postMessage("Hello World!");
+    worker.postMessage({
+      'msg': 'WebWorker is great !'
+    });
+  </script>
+</html>

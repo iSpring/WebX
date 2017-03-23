@@ -1,0 +1,16 @@
+{
+    "name": "bfc",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "reference": [
+        "http://www.cnblogs.com/lhb25/p/inside-block-formatting-ontext.html",
+        "http://www.cnblogs.com/chocking/p/4743929.html",
+        "http://www.w3cplus.com/css/understanding-bfc-and-margin-collapse.html"
+    ]
+}
