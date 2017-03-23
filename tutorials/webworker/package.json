@@ -7,5 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "reference": [
+    "https://www.html5rocks.com/en/tutorials/workers/basics/",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API",
+    "https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker",
+    "http://stackoverflow.com/questions/14785761/limitations-of-web-workers"
+  ]
 }

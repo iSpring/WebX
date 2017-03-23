@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebWorker</title>
+  </head>
+  <body></body>
+  <script type="text/javascript">
+    var worker = new Worker("worker.js");
+
+    worker.addEventListener('message', function(evt){
+      console.log("收到WebWorker的message: " + evt.data);
+    }, false);
+
+    worker.postMessage("Hello World!");
+  </script>
+</html>
