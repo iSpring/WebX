@@ -1,0 +1,15 @@
+{
+  "name": "setter-getter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "reference": [
+    "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/set",
+    "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get"
+  ]
+}
