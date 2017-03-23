@@ -3,14 +3,29 @@
   <head>
     <title>WebWorker</title>
   </head>
-  <body></body>
+  <body>
+    <p>如果想接收从A发送来的message，那么需要为A添加message事件，A.addEventListener('message', function(evt){}, false)</p>
+    <p>如果想向B发送message，那么需要调用B.postMessage(message)</p>
+    <p>在worker中不能访问window对象，可以使用self，self是一个DedicatedWorkerGlobalScope对象</p>
+    <p>在主线程中可以通过调用worker.terminate()停止worker，也可以在worker代码中使用self.close()停止</p>
+    <p>postMessage()方法可以传递字符串或对象，IE8/9只能传递字符串</p>
+    <p>主线程和工作线程之间通过postMessage()传递JSON对象时，对象会被序列化，然后在另一端反序列化，即实现了对象的拷贝，二者没有共享该对象实例</p>
+  </body>
   <script type="text/javascript">
     var worker = new Worker("worker.js");
 
     worker.addEventListener('message', function(evt){
-      console.log("收到WebWorker的message: " + evt.data);
+      if(typeof evt.data === 'string'){
+        console.log("主线程收到WebWorker的字符串message: " + evt.data);
+      }else{
+        console.log("主线程收到WebWorker的对象message: " + JSON.stringify(evt.data));
+      }
     }, false);
 
+    //向worker发送message
     worker.postMessage("Hello World!");
+    worker.postMessage({
+      'msg': 'WebWorker is great !'
+    });
   </script>
 </html>
