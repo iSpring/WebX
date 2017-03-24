@@ -16,7 +16,8 @@
           }else if(this.readyState === 3){
             console.log("xhr receiving from server");
             var responseHeaders = this.getAllResponseHeaders();
-            console.log("responseHeaders: ", responseHeaders);
+            console.log("responseHeaders: ");
+            console.log(responseHeaders);
           }else if(this.readyState === 4){
             if(this.status === 200){
               console.log("data: ", this.responseText);
