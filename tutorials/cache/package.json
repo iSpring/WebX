@@ -7,5 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "reference": [
+	"https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=zh-cn",
+	"http://blog.wpjam.com/m/last-modified-etag-expires-cache-control/"
+  ]
 }
