@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>XMLHttpRequest</title>
+    <script type="text/javascript">
+      function basic(){
+        //IE7+ supports XMLHttpRequest directly
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+          if(this.readyState === 0){
+            console.log("xhr initial state");
+          }else if(this.readyState === 1){
+            console.log("xhr opend")
+          }else if(this.readyState === 2){
+            console.log("xhr sent");
+          }else if(this.readyState === 3){
+            console.log("xhr receiving from server");
+            var responseHeaders = this.getAllResponseHeaders();
+            console.log("responseHeaders: ");
+            console.log(responseHeaders);
+          }else if(this.readyState === 4){
+            if(this.status === 200){
+              console.log("data: ", this.responseText);
+            }else{
+              console.error("xhr error: ", this.statusText);
+            }
+          }
+        };
+        xhr.open("GET", "/user", true);
+        xhr.send();
+      }
+    </script>
+  </head>
+  <body>
+
+  </body>
+</html>
