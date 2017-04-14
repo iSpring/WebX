@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <style type="text/css">
+        .button{
+            position: relative;
+            width: 200px;
+            height: 50px;
+            line-height: 50px;
+            background-color: yellowgreen;
+            text-align: center;
+            overflow: hidden;
+        }
+        .button::after{
+            position: absolute;
+            top: 0;
+            right: -25px;
+            display: block;
+            width: 50px;
+            height: 50px;
+            content: "";
+            border-radius: 50%;
+            background-color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="button">按钮</div>
+</body>
+
+</html>
