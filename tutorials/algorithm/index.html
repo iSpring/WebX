@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sort</title>
+    <meta http-equiv="Content-Type" content="text/html" />
+    <script type="text/javascript">
+
+        function swap(arr, index1, index2){
+            var temp = arr[index1];
+            arr[index1] = arr[index2];
+            arr[index2] = temp;
+        }
+
+        //快速排序，内部递归调用
+        function quickSort(arr, leftIndex, rightIndex){
+            if(leftIndex >= rightIndex){
+                return;
+            }
+            var boundary = getBoundary(arr, leftIndex, rightIndex);
+            quickSort(arr, leftIndex, boundary - 1);
+            quickSort(arr, boundary+1, rightIndex);
+        }
+
+        //进行一次快速排序，返回边界索引
+        function getBoundary(arr, leftIndex, rightIndex){
+            var standard = arr[leftIndex];
+
+            while(leftIndex < rightIndex){
+                while(leftIndex < rightIndex && arr[rightIndex] >= standard){
+                    rightIndex--;
+                }
+                swap2(arr, leftIndex, rightIndex);
+                
+                while(leftIndex < rightIndex && arr[leftIndex] <= standard){
+                    leftIndex++;
+                }
+                swap2(arr, leftIndex, rightIndex);
+            }
+
+            return leftIndex;
+        }
+
+        //简单冒泡排序，从小到大，简单的交换排序算法
+        function bubble1(arr){
+            //当第一次外循环结束时, arr[0]已经是最小的
+            //当第二次外循环结束时，arr[1]是第二小的
+            //arr[i]依次遍历比较区间[i + 1, arr.length - 1]之间的元素
+            for(var i = 0; i < arr.length; i++){
+                for(var j = i + 1; j < arr.length; j++){
+                    //保证a[i]在区间[i, arr.length - 1]中是最小的
+                    if(arr[i] > arr[j]){
+                        swap(arr, i, j);
+                    }
+                }
+            }
+        }
+
+        //改进版冒泡排序，从小到大排序，相邻两个元素比较大小
+        function bubble2(arr){
+            //当第一次外循环结束时，arr最后一个索引值是最大的
+            //当第二次外循环结束时，arr倒数第二个索引值是第二大的
+            for(var i = 0; i < arr.length; i++){
+                for(var j = 0; j < arr.length - 1 - i; j++){
+                    if(arr[j] > arr[j+1]){
+                        swap(arr, j, j+1);
+                    }
+                }
+            }
+        }
+
+        //使用一个标志位，来标识当前数组是否已经有序。
+        //如果无序，则继续冒泡排序；如果已经有序，则退出排序算法。
+        //这样就可以很好地规避掉一些不必要的比较操作。
+        function bubble3(arr){
+            var status = true; // 记录是否发生交换信息
+            //当第一次外循环结束时，arr最后一个索引值是最大的
+            //当第二次外循环结束时，arr倒数第二个索引值是第二大的
+            //status为true，表示发生过交换，数组仍是无序的，需要继续外循环
+            //如果status为false，表示上一次外循环没有发生交换，表示上一次外循环之后数组就是有序的了，循环中断
+            for(var i = 0; i < arr.length && status; i++){
+                status = false;
+                for(var j = 0; j < arr.length - 1 - i; j++){
+                    if(arr[j] > arr[j+1]){
+                        swap(arr, j, j+1);
+                        //此时发生交换，记录status
+                        status = true;
+                    }
+                }
+            }
+        }
+
+        //node:{name,left,right}
+        //http://blog.csdn.net/fantasy_lin_/article/details/52751559
+        var rootTree = {
+            name: 35,
+            left: {
+                name: 20,
+                left: {
+                    name: 15,
+                    right: {
+                        name: 16
+                    }
+                },
+                right: {
+                    name: 29,
+                    left: {
+                        name: 28
+                    },
+                    right: {
+                        name: 30
+                    }
+                }
+            },
+            right:{
+                name: 40,
+                right: {
+                    name: 50,
+                    left: {
+                        name: 45
+                    },
+                    right: {
+                        name: 55
+                    }
+                }
+            }
+        };
+
+        //先序遍历，递归，根-左-右
+        function rootFirst(node){
+            console.log(node.name);
+
+            if(node.left){
+                rootFirst(node.left);
+            }
+
+            if(node.right){
+                rootFirst(node.right);
+            }
+        }
+
+        //先序遍历，非递归，根-左-右
+        function rootFirst2(rootNode){
+            //rootNode入栈->POP->右子树入栈->左子树入栈-POP左子树出栈->POP右子树出栈
+            var stack = [];
+            stack.push(rootNode);
+            var currentNode = null;
+
+            while(stack.length > 0){
+                currentNode = stack.pop();
+                console.log(currentNode.name);
+
+                if(currentNode.right){
+                    //右子树入栈
+                    stack.push(currentNode.right);
+                }
+
+                if(currentNode.left){
+                    //左子树入栈
+                    stack.push(currentNode.left);
+                }
+            }
+        }
+
+        //广度优先遍历（层次遍历），非递归
+        function breadthFirst(rootNode){
+            //rootNode入栈->shift->push左子树入队->push右子树入队->shift左子树->shift右子树
+            var queue = [];
+            queue.push(rootNode);
+            var currentNode = null;
+            while(queue.length > 0){
+                currentNode = queue.shift();
+                console.log(currentNode.name);
+
+                if(currentNode.left){
+                    //左子树入队
+                    queue.push(currentNode.left);
+                }
+
+                if(currentNode.right){
+                    //右子树入队
+                    queue.push(currentNode.right);
+                }
+            }
+        }
+
+        //中序遍历，递归，左-根-右
+        function rootMiddle(node){
+            if(node.left){
+                rootMiddle(node.left);
+            }
+
+            console.log(node.name);
+
+            if(node.right){
+                rootMiddle(node.right);
+            }
+        }
+
+        //后续遍历，递归，左-右-根
+        function rootLast(node){
+            if(node.left){
+                rootLast(node.left);
+            }
+            
+            if(node.right){
+                rootLast(node.right);
+            }
+
+            console.log(node.name);
+        }
+
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>
