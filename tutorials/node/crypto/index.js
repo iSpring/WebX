@@ -31,3 +31,14 @@ console.log('----------------------------------');
 let d = crypto.createHash('sha512');
 d.update('sunqun');
 console.log(d.digest().toString('utf8'));
+
+//P189,使用密钥对sessionId（口令）进行加密,只要密钥不被攻击者知道就安全
+//将值通过私钥签名，由.分割原值和签名
+var sign = function(val, secret){
+   return val + '.' + crypto.createHmac('sha256', secret).update(val).digest('base64').replace(/\=+$/, '');
+}
+//取出口令部分进行签名，对比用户提交的值，验证sessionId的合法性
+var unsign = function(val, secret){
+   var str = val.slice(0, val.lastIndexOf('.'));
+   return sign(str, secret) === val ? str : false;
+}
