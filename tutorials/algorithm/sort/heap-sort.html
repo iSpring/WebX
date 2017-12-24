@@ -24,31 +24,32 @@
         //该方法将i的子树调整为大根堆
         function adjustHeap(array, i, lastIndex){
             //首先要判断i是不是非叶子节点，如果i是叶子节点就不用处理
-            if(i <= Math.floor(lastIndex / 2)){
-                var leftChild = 2 * i + 1;
-                var rightChild = leftChild + 1;
-                var maxIndex = i;//maxIndex用于记录i、leftChild、rightChild中对应最大value值的索引
+            if(i > Math.floor(lastIndex / 2)){
+                return;
+            }
+            var leftChild = 2 * i + 1;
+            var rightChild = leftChild + 1;
+            var maxIndex = i;//maxIndex用于记录i、leftChild、rightChild中对应最大value值的索引
 
-                //判断左节点存是否存在，并进一步判断其值是否大于maxIndex对应的值
-                if(leftChild <= lastIndex && array[leftChild] > array[maxIndex]){
-                    //注意不要把array[leftChild] > array[maxIndex]写成array[leftChild] > array[i]
-                    maxIndex = leftChild;
-                }
+            //判断左节点存是否存在，并进一步判断其值是否大于maxIndex对应的值
+            if(leftChild <= lastIndex && array[leftChild] > array[maxIndex]){
+                //注意不要把array[leftChild] > array[maxIndex]写成array[leftChild] > array[i]
+                maxIndex = leftChild;
+            }
 
-                //判断右节点存是否存在，并进一步判断其值是否大于maxIndex对应的值
-                if(rightChild <= lastIndex && array[rightChild] > array[maxIndex]){
-                    //注意不要把array[rightChild] > array[maxIndex]写成array[rightChild] > array[i]                    
-                    maxIndex = rightChild;
-                }
+            //判断右节点存是否存在，并进一步判断其值是否大于maxIndex对应的值
+            if(rightChild <= lastIndex && array[rightChild] > array[maxIndex]){
+                //注意不要把array[rightChild] > array[maxIndex]写成array[rightChild] > array[i]                    
+                maxIndex = rightChild;
+            }
 
-                //父节点的值比某一个子节点的值要小
-                if(maxIndex !== i){
-                    //父子节点交互
-                    swap(array, i, maxIndex);
-                    //交换之后，maxIndex对应的子节点的值变成了array[i]，变小了，
-                    //这可能导致以maxIndex为父节点的子树不满足大顶堆，需要递归处理
-                    adjustHeap(array, maxIndex, lastIndex);
-                }
+            //父节点的值比某一个子节点的值要小
+            if(maxIndex !== i){
+                //父子节点交互
+                swap(array, i, maxIndex);
+                //交换之后，maxIndex对应的子节点的值变成了array[i]，变小了，
+                //这可能导致以maxIndex为父节点的子树不满足大顶堆，需要递归处理
+                adjustHeap(array, maxIndex, lastIndex);
             }
         }
 
