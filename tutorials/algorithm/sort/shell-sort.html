@@ -25,7 +25,7 @@
         //     for(let i = 1; i < arr.length; i++){
         //         let temp = arr[i];
         //         let j = i;
-        //         while(j > 0 && arr[j - 1] > temp){
+        //         while(j - 1 >= 0 && arr[j - 1] > temp){
         //             arr[j] = arr[j - 1];
         //             j--;
         //         }
@@ -33,54 +33,23 @@
         //     }
         // }
 
-        function shellSort(arr){
-            //gap指的是分组的数量，最开始gap为arr.length/2，也就是开始的时候分组很多，每组只有两个成员
-            //然后不断使得gap分组数量折半，这样每组成员数量翻倍
-            //最后gap为1，只有一组，这一组的成员就是arr全部成员
-            for(let gap = parseInt(arr.length / 2); gap > 0; gap = parseInt(gap / 2)){
-                //遍历所有的组
-                //!!! i<gap
-                for(let i = 0; i < gap; i++){
-
-                    //------------------插入排序开始--------------------------
-                    //对每一组都分别使用插入排序
-                    //!!!let j = i+ gap; j < arr.length; j +=  gap
-                    //!!! j < arr.length
-                    for(let j = i + gap; j < arr.length; j +=  gap){
-                        let temp = arr[j];
-                        let k = j;
-                        //!!! k > gap && arr[k - gap] > temp
-                        //确保arr[k - gap]没有异常
-                        while((k - gap) >= 0 && arr[k - gap] > temp){
-                            arr[k] = arr[k - gap];
-                            k -= gap;
+        function shellSort(arr) {
+            for (let gap = parseInt(arr.length / 2); gap > 0; gap = parseInt(gap / 2)) {
+                for (let k = 0; k < gap; k++) {
+                    for (let i = k + gap; i < arr.length; i += gap) {
+                        let temp = arr[i];
+                        let j = i;
+                        //while(j >= gap && arr[j - gap] > temp)
+                        while (j >= gap && arr[j - gap] > temp) {
+                            arr[j] = arr[j - gap];
+                            j -= gap;
                         }
-                        arr[k] = temp;
+                        //arr[j] = temp;
+                        arr[j] = temp;
                     }
-
-                    //------------------插入排序结束--------------------------
                 }
             }
         }
-
-        // function shellSort2(arr){
-        //     //gap依次折半
-        //     for(let gap = parseInt(arr.length / 2); gap > 0; gap = parseInt(gap / 2)){
-        //         //遍历gap个分组
-        //         for(let i = 0; i < gap; i++){
-        //             //进行插入排序
-        //             for(let j = i + gap; j < arr.length; j+=gap){
-        //                 let temp = arr[j];
-        //                 let k = j;
-        //                 while((k-gap)>=0 && arr[k-gap] > temp){
-        //                     arr[k] = arr[k-gap];
-        //                     k-=gap;
-        //                 }
-        //                 arr[k] = temp;
-        //             }
-        //         }
-        //     }
-        // }
 
         function test(){
             var arr = [7, 2, 3, 5, 8, 0];
