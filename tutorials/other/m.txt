@@ -1,0 +1,17 @@
+获取style信息
+style: 'mapbox://styles/mapbox/streets-v9'
+https://api.mapbox.com/styles/v1/mapbox/streets-v9?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA
+sources: {
+    composite: {
+        url: "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
+        type: "vector"
+    }
+},
+composite表示将两个source混合到一起：mapbox-terrain-v2和mapbox-streets-v7
+
+获取source
+composite: {
+    url: "mapbox://mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
+    type: "vector"
+}
+https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7.json?secure&access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA
