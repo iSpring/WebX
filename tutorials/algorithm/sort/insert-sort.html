@@ -13,13 +13,13 @@
         2.  将a[i]并入当前的有序区a[0…i-1]中形成a[0…i]的有序区间。
         3.  i++并重复第二步直到i==n-1。排序完成。
         直接插入排序是稳定的排序方法，属于内部排序。
-        时间复杂度：平均时间复杂度为O(n2)，最坏时间复杂度O(n2)	
+        时间复杂度：平均时间复杂度为O(n2)，最坏时间复杂度O(n2)
         空间复杂度：O(1)
         */
 
         //---------------------------------插入排序------------------------------------
 
-        function intersectSort(arr){
+        function insertSort(arr){
             //i从1开始，因为a[0]本身就认为有序
             for(let i = 1; i < arr.length; i++){
                 //确保v放置在a[0 -- i]之间的合适位置确保这一区域是有序的
@@ -41,7 +41,7 @@
             }
         }
 
-        // function intersectSort111(arr){
+        // function insertSort111(arr){
         //     for(let i = 1; i < arr.length; i++){
         //         let temp = arr[i];
         //         let j = i;
@@ -53,7 +53,7 @@
         //     }
         // }
 
-        // function intersectSort1(arr){
+        // function insertSort1(arr){
         //     for(let i = 1; i < arr.length; i++){
         //         let temp = arr[i];
         //         let j = i;
@@ -67,7 +67,7 @@
 
         function test(){
             var arr = [7, 2, 3, 5, 8, 0];
-            intersectSort(arr);
+            insertSort(arr);
             console.log(arr);
         }
 
