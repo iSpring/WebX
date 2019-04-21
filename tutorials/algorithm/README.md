@@ -1,9 +1,9 @@
 ## sort 排序算法
  1. intersect-sort.html 插入排序
 
- 2. bubble-sort.html 冒泡排序
+ 2. shell-sort.html 希尔排序
 
- 3. shell-sort.html 希尔排序
+ 3. bubble-sort.html 冒泡排序
 
  4. quick-sort.html 快速排序
  
