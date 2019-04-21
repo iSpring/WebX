@@ -1,5 +1,5 @@
 ## sort 排序算法
- 1. intersect-sort.html 插入排序
+ 1. insert-sort.html 插入排序
 
  2. shell-sort.html 希尔排序
 
