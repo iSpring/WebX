@@ -27,8 +27,8 @@
                 let j = i;// 让j指向i，j就是最终要放temp值的索引，我们要计算j
                 // 如果j-1的位置的值比temp大，那么就让j-1的值落到j上，下降
 
-                // !!一定要记住循环条件是j > 0 && arr[j-1] > temp
-                while (j > 0 && arr[j - 1] > temp){
+                // !!一定要记住循环条件是j - 1 >= 0 && arr[j-1] > temp
+                while (j - 1 >= 0 && arr[j - 1] > temp){
                     // 记住循环体的内容
                     arr[j] = arr[j - 1];
                     j--;
